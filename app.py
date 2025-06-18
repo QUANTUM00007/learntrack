@@ -1,6 +1,9 @@
 # app.py
 from flask import Flask, render_template, request, redirect
 from models import init_db, get_connection
+import csv
+import io
+from flask import send_file
 
 app = Flask(__name__)
 
@@ -108,6 +111,73 @@ def topics():
         topics_list = cursor.fetchall()
 
     return render_template('topics.html', topics=topics_list, subjects=subjects)
+
+@app.route('/dashboard/download_csv')
+def download_dashboard_csv():
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Subject Name', 'Total Hours'])
+
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT s.name, SUM(l.hours)
+            FROM logs l
+            JOIN subjects s ON l.subject_id = s.id
+            GROUP BY l.subject_id
+        ''')
+        for row in cursor.fetchall():
+            writer.writerow(row)
+
+    output.seek(0)
+    return send_file(io.BytesIO(output.getvalue().encode('utf-8')),
+                     mimetype='text/csv',
+                     as_attachment=True,
+                     download_name='dashboard_summary.csv')
+
+@app.route('/logs/download_csv')
+def download_logs_csv():
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Subject', 'Hours', 'Date'])
+
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT s.name, l.hours, l.log_date
+            FROM logs l
+            JOIN subjects s ON l.subject_id = s.id
+            ORDER BY l.log_date DESC
+        ''')
+        for row in cursor.fetchall():
+            writer.writerow(row)
+
+    output.seek(0)
+    return send_file(io.BytesIO(output.getvalue().encode('utf-8')),
+                     mimetype='text/csv',
+                     as_attachment=True,
+                     download_name='study_logs.csv')
+
+@app.route('/logs')
+def logs():
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT l.id, s.name, l.hours, l.log_date
+            FROM logs l
+            JOIN subjects s ON l.subject_id = s.id
+            ORDER BY l.log_date DESC
+        ''')
+        logs = cursor.fetchall()
+    return render_template('logs.html', logs=logs)
+
+@app.route('/logs/delete/<int:log_id>', methods=['POST'])
+def delete_log(log_id):
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM logs WHERE id = ?", (log_id,))
+        conn.commit()
+    return redirect('/logs')
 
 
 if __name__ == '__main__':
