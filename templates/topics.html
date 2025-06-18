@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Add Topic</h2>
+<form method="POST">
+    <label for="subject">Subject:</label>
+    <select name="subject_id" required>
+        {% for subject in subjects %}
+        <option value="{{ subject[0] }}">{{ subject[1] }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="topic_name">Topic Name:</label>
+    <input type="text" name="topic_name" required><br><br>
+
+    <button type="submit">Add Topic</button>
+</form>
+
+<hr>
+
+<h3>Topics List</h3>
+<ul>
+    {% for topic in topics %}
+    <li>{{ topic[1] }} ({{ topic[2] }})</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Welcome to LearnTrack 📘</h2>
+<p>Track your study progress by adding subjects and logging your study hours.</p>
+
+<!-- Suggested Links -->
+<ul>
+    <li><a href="{{ url_for('subjects') }}">➕ Add a Subject</a></li>
+    <li><a href="{{ url_for('log') }}">🕒 Log Study Hours</a></li>
+    <li><a href="{{ url_for('dashboard') }}">📊 View Dashboard</a></li>
+</ul>
+{% endblock %}

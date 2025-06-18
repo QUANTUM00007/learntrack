@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>📊 Study Dashboard</h2>
+
+<h3>Study Summary</h3>
+<table>
+    <tr><th>Subject</th><th>Total Hours</th></tr>
+    {% for subject in stats %}
+    <tr><td>{{ subject[0] }}</td><td>{{ subject[1] }} hrs</td></tr>
+    {% endfor %}
+</table>
+
+<h3>🎯 Study Goals</h3>
+<ul>
+    {% for goal in goals %}
+    <li><strong>{{ goal[0] }}:</strong> {{ goal[1] }} hrs/week</li>
+    {% endfor %}
+</ul>
+
+<h3>📘 Topics Covered</h3>
+<ul>
+    {% for t in topics %}
+    <li><strong>{{ t[0] }}:</strong> {{ t[1] }}</li>
+    {% endfor %}
+</ul>
+
+<h3>📈 Visual Summary</h3>
+<canvas id="studyChart" width="400" height="200"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('studyChart');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for subject in stats %}"{{ subject[0] }}",{% endfor %}],
+            datasets: [{
+                label: 'Total Hours',
+                data: [{% for subject in stats %}{{ subject[1] }},{% endfor %}],
+                backgroundColor: '#007acc',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+{% endblock %}

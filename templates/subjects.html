@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Add New Subject</h2>
+<form method="POST">
+    <label for="name">Subject Name:</label>
+    <input type="text" name="name" required><br><br>
+    <button type="submit">Add</button>
+</form>
+
+{% if subjects %}
+    <h3>📚 Existing Subjects</h3>
+    <ul>
+        {% for subject in subjects %}
+            <li>{{ subject[1] }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
