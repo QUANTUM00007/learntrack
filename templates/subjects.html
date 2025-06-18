@@ -7,12 +7,26 @@
     <button type="submit">Add</button>
 </form>
 
-{% if subjects %}
-    <h3>📚 Existing Subjects</h3>
-    <ul>
-        {% for subject in subjects %}
-            <li>{{ subject[1] }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+<hr>
+<h2>Subjects List</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for subject in subjects %}
+        <tr>
+            <td>{{ subject[1] }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('delete_subject', subject_id=subject[0]) }}" onsubmit="return confirm('Delete this subject?')">
+                    <button type="submit" class="btn-delete">🗑 Delete</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

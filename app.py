@@ -27,6 +27,17 @@ def subjects():
         subjects = cursor.fetchall()
     return render_template('subjects.html', subjects=subjects)
 
+@app.route('/delete_subject/<int:subject_id>', methods=['POST'])
+def delete_subject(subject_id):
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        # First delete any logs associated with this subject
+        cursor.execute("DELETE FROM logs WHERE subject_id = ?", (subject_id,))
+        cursor.execute("DELETE FROM topics WHERE subject_id = ?", (subject_id,))
+        cursor.execute("DELETE FROM subjects WHERE id = ?", (subject_id,))
+        conn.commit()
+    return redirect('/subjects')
+
 @app.route('/log', methods=['GET', 'POST'])
 def log():
     if request.method == 'POST':
