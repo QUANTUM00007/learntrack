@@ -1,29 +1,48 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>All Study Logs</h2>
-<a href="{{ url_for('download_logs_csv') }}">⬇️ Download Logs CSV</a>
-<table>
-    <thead>
-        <tr>
-            <th>Subject</th>
-            <th>Hours</th>
-            <th>Date</th>
-            <th>Delete</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for log in logs %}
-        <tr>
-            <td>{{ log[1] }}</td>
-            <td>{{ log[2] }}</td>
-            <td>{{ log[3] }}</td>
-            <td>
-                <form action="{{ url_for('delete_log', log_id=log[0]) }}" method="POST" onsubmit="return confirm('Delete this log?');">
-                    <button type="submit">🗑️</button>
-                </form>
-            </td>
-        </tr>
+<h2>📝 Log Study Hours</h2>
+
+<form method="POST">
+    <label for="subject">Select Subject:</label>
+    <select name="subject_id" required>
+        {% for subject in subjects %}
+        <option value="{{ subject[0] }}">{{ subject[1] }}</option>
         {% endfor %}
-    </tbody>
+    </select><br><br>
+
+    <label for="hours">Hours Studied:</label>
+    <input type="number" name="hours" step="0.1" required><br><br>
+
+    <label for="log_date">Date:</label>
+    <input type="date" name="log_date" required><br><br>
+
+    <button type="submit">Log Study</button>
+</form>
+
+<hr>
+
+<h3>📋 Logged Study Sessions</h3>
+<table>
+    <tr>
+        <th>Subject</th>
+        <th>Hours</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log[1] }}</td>
+        <td>{{ log[2] }}</td>
+        <td>{{ log[3] }}</td>
+        <td>
+            <form method="POST" action="{{ url_for('logs.delete_log', id=log[0]) }}" onsubmit="return confirm('Delete this log?')">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
 </table>
+<div style="margin: 20px 0;">
+    <a href="{{ url_for('logs.download_logs') }}" class="button">📥 Download Logs as CSV</a>
+</div>
 {% endblock %}

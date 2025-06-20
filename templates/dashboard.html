@@ -1,31 +1,81 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>📊 Study Dashboard</h2>
+<h2>📊 Weekly Study Dashboard</h2>
 
-<h3>Study Summary</h3>
-<table>
-    <tr><th>Subject</th><th>Total Hours</th></tr>
-    {% for subject in stats %}
-    <tr><td>{{ subject[0] }}</td><td>{{ subject[1] }} hrs</td></tr>
+<div class="dashboard-section">
+    <h3>📋 Study Summary</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Total Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in stats %}
+            <tr>
+                <td>{{ subject[0] }}</td>
+                <td>{{ subject[1]|round(1) }} hrs</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<hr>
+
+<div class="dashboard-section">
+    <h3>🎯 Weekly Goals & Progress</h3>
+    {% for subject in detailed_goals %}
+        <div style="margin-bottom: 20px;">
+            <h4>{{ subject.name }}</h4>
+            <p><strong>Goal:</strong> {{ subject.goal }} hrs/week</p>
+            <p><strong>Logged:</strong> {{ subject.logged|round(1) }} hrs</p>
+            {% set percent = (subject.logged / subject.goal * 100) if subject.goal > 0 else 0 %}
+            <div style="background: #eee; border-radius: 8px; overflow: hidden; width: 100%; max-width: 400px;">
+                <div style="width: {{ percent if percent < 100 else 100 }}%; background: #007acc; color: white; padding: 4px;">
+                    {{ percent|round(1) }}%
+                </div>
+            </div>
+            {% if subject.logged < subject.goal %}
+                <p style="color: red;">⏱️ You're behind your goal.</p>
+            {% elif subject.logged > subject.goal %}
+                <p style="color: green;">✅ You’ve exceeded your goal!</p>
+            {% else %}
+                <p>🎯 You're exactly on track!</p>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>No goals set yet. <a href="{{ url_for('goals.goals') }}">Set goals</a>.</p>
     {% endfor %}
-</table>
+</div>
 
-<h3>🎯 Study Goals</h3>
-<ul>
-    {% for goal in goals %}
-    <li><strong>{{ goal[0] }}:</strong> {{ goal[1] }} hrs/week</li>
-    {% endfor %}
-</ul>
+<hr>
 
-<h3>📘 Topics Covered</h3>
-<ul>
-    {% for t in topics %}
-    <li><strong>{{ t[0] }}:</strong> {{ t[1] }}</li>
-    {% endfor %}
-</ul>
+<div class="dashboard-section">
+    <h3>📘 Topics Covered</h3>
+    {% if topic_data %}
+        {% for subject, topics in topic_data.items() %}
+            <div>
+                <h4>{{ subject }}</h4>
+                <ul>
+                    {% for topic in topics %}
+                        <li>{{ topic }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No topics logged yet.</p>
+    {% endif %}
+</div>
 
-<h3>📈 Visual Summary</h3>
-<canvas id="studyChart" width="400" height="200"></canvas>
+<hr>
+
+<div class="dashboard-section">
+    <h3>📈 Visual Chart</h3>
+    <canvas id="studyChart" width="400" height="200"></canvas>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -38,13 +88,13 @@
                 label: 'Total Hours',
                 data: [{% for subject in stats %}{{ subject[1] }},{% endfor %}],
                 backgroundColor: '#007acc',
-                borderRadius: 5
+                borderRadius: 6
             }]
         },
         options: {
-            scales: {
-                y: { beginAtZero: true }
-            }
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
         }
     });
 </script>

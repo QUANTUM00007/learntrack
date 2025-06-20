@@ -1,25 +1,15 @@
 {% extends 'base.html' %}
-{% block content %}
-<div class="hero">
-    <h2>Welcome to LearnTrack 📘</h2>
-    <p>Track your study hours, monitor your progress, and stay productive!</p>
-</div>
 
-<div class="cards">
-    <div class="card">
-        <h3>📚 Subjects</h3>
-        <p>Add and manage subjects you're learning.</p>
-        <a href="{{ url_for('subjects') }}" class="btn">Manage Subjects</a>
-    </div>
-    <div class="card">
-        <h3>🕒 Log Study</h3>
-        <p>Record your daily study hours with ease.</p>
-        <a href="{{ url_for('log') }}" class="btn">Log Study</a>
-    </div>
-    <div class="card">
-        <h3>📈 Dashboard</h3>
-        <p>Visualize your learning time by subject.</p>
-        <a href="{{ url_for('dashboard') }}" class="btn">View Dashboard</a>
-    </div>
+{% block content %}
+<div class="text-center mt-5">
+    <h2 class="mb-3">Welcome to 📘 LearnTrack</h2>
+    <p class="lead mb-4">Track your study subjects, log your hours, and stay on top of your goals!</p>
+
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+    {% else %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-success btn-lg me-2">Login</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary btn-lg">Register</a>
+    {% endif %}
 </div>
 {% endblock %}

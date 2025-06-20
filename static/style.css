@@ -1,259 +1,151 @@
-/* Reset some browser defaults */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body styling */
+/* General Reset */
 body {
+    margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f9;
+    background-color: #f4f6f8;
     color: #333;
-    line-height: 1.6;
-    padding: 20px;
 }
 
-/* Header styles */
+a {
+    color: #007acc;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Header & Navigation */
 header {
     background-color: #007acc;
-    color: #fff;
+    color: white;
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-radius: 10px;
     flex-wrap: wrap;
 }
 
-header h1 a {
-    color: white;
-    text-decoration: none;
-    font-size: 28px;
+header h1 {
+    margin: 0;
+    font-size: 24px;
 }
 
-nav {
+header nav {
     margin-top: 10px;
 }
 
-nav a {
+header nav a {
+    margin-left: 15px;
     color: white;
-    text-decoration: none;
-    margin-left: 20px;
-    font-weight: bold;
-    transition: color 0.3s;
+    font-weight: 500;
 }
 
-nav a:hover {
-    text-decoration: underline;
-    color: #d1ecff;
-}
-
-/* Main content */
+/* Main Content */
 main {
-    margin-top: 30px;
-    padding: 25px;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    padding: 30px 20px;
+    max-width: 960px;
+    margin: auto;
 }
 
-/* Headings */
-h2 {
-    color: #007acc;
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
     margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f0;
 }
 
 /* Forms */
 form {
-    max-width: 500px;
-    margin-top: 20px;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
 }
 
-form label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #333;
-}
-
-form input,
-form select {
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    padding: 10px;
     width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 18px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    font-size: 15px;
-    transition: border-color 0.3s;
 }
 
-form input:focus,
-form select:focus {
-    border-color: #007acc;
-    outline: none;
-}
-
-/* Buttons */
+input[type="submit"],
 button {
     background-color: #007acc;
     color: white;
-    border: none;
     padding: 10px 16px;
-    font-size: 16px;
+    border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-button:hover {
+button:hover,
+input[type="submit"]:hover {
     background-color: #005fa3;
 }
 
-/* Table (for dashboard) */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+/* Sections */
+.dashboard-section {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 12px 14px;
-    text-align: left;
+/* Flash messages */
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
 }
 
-table th {
-    background-color: #007acc;
-    color: white;
-    font-weight: 600;
+.flashes li {
+    background-color: #ffeb3b;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-left: 6px solid #ffc107;
+    border-radius: 6px;
 }
-
-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-table tr:hover {
-    background-color: #f1f7ff;
-}
-
-h3 {
-    margin-top: 25px;
-    color: #444;
-}
-
-ul {
-    margin-top: 10px;
-    list-style-type: square;
-    padding-left: 20px;
-}
-
-ul li {
-    padding: 5px 0;
-}
-
 
 /* Footer */
 footer {
-    margin-top: 40px;
     text-align: center;
-    font-size: 14px;
-    color: #777;
+    padding: 20px;
+    background-color: #e0e0e0;
+    color: #333;
+    margin-top: 40px;
 }
 
 /* Responsive */
-@media (max-width: 600px) {
-    header {
-        flex-direction: column;
-        align-items: flex-start;
+@media screen and (max-width: 768px) {
+    header, main {
+        padding: 15px;
     }
 
-    nav a {
-        margin-left: 0;
-        margin-right: 15px;
-        display: inline-block;
-        margin-top: 8px;
+    header nav a {
+        display: block;
+        margin: 10px 0;
     }
 
-    form {
+    input[type="submit"],
+    button {
         width: 100%;
     }
-}
-
-.hero {
-    text-align: center;
-    padding: 30px 20px;
-    background-color: #eaf4ff;
-    border-radius: 10px;
-    margin-bottom: 30px;
-}
-
-.hero h2 {
-    font-size: 32px;
-    color: #007acc;
-    margin-bottom: 10px;
-}
-
-.hero p {
-    font-size: 18px;
-    color: #555;
-}
-
-.cards {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.card {
-    flex: 1 1 250px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    text-align: center;
-}
-
-.card h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
-    color: #007acc;
-}
-
-.card p {
-    color: #666;
-    font-size: 15px;
-    margin-bottom: 15px;
-}
-
-.card .btn {
-    background-color: #007acc;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.card .btn:hover {
-    background-color: #005fa3;
-}
-
-.btn-delete {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn-delete:hover {
-    background-color: #c0392b;
 }

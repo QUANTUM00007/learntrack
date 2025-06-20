@@ -1,26 +1,63 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Add Topic</h2>
-<form method="POST">
-    <label for="subject">Subject:</label>
-    <select name="subject_id" required>
-        {% for subject in subjects %}
-        <option value="{{ subject[0] }}">{{ subject[1] }}</option>
-        {% endfor %}
-    </select><br><br>
+<div class="container mt-4">
+    <h2>📘 Manage Topics</h2>
 
-    <label for="topic_name">Topic Name:</label>
-    <input type="text" name="topic_name" required><br><br>
+    <!-- Add Topic Form -->
+    <div class="card mb-4">
+        <div class="card-header">Add New Topic</div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="subject_id" class="form-label">Subject</label>
+                    <select name="subject_id" class="form-select" required>
+                        <option value="">-- Select Subject --</option>
+                        {% for subject in subjects %}
+                        <option value="{{ subject[0] }}">{{ subject[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="topic_name" class="form-label">Topic Name</label>
+                    <input type="text" name="topic_name" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Topic</button>
+            </form>
+        </div>
+    </div>
 
-    <button type="submit">Add Topic</button>
-</form>
-
-<hr>
-
-<h3>Topics List</h3>
-<ul>
-    {% for topic in topics %}
-    <li>{{ topic[1] }} ({{ topic[2] }})</li>
-    {% endfor %}
-</ul>
+    <!-- Topics List -->
+    <h3 class="mb-3">Existing Topics</h3>
+    {% if topics %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Topic</th>
+                    <th>Subject</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for topic in topics %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ topic[1] }}</td>
+                    <td>{{ topic[2] }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('topics.delete_topic', id=topic[0]) }}"
+                              onsubmit="return confirm('Delete this topic?');">
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No topics added yet.</p>
+    {% endif %}
+</div>
 {% endblock %}

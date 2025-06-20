@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>🎯 Study Goals</h2>
+
+<div class="dashboard-section">
+    <h3>Set or Update Weekly Goal</h3>
+    <form method="POST" onsubmit="return validateForm();">
+        <label for="subject_id">Subject:</label>
+        <select name="subject_id" id="subject_id" required>
+            <option value="">-- Select Subject --</option>
+            {% for subject in subjects %}
+                <option value="{{ subject[0] }}">{{ subject[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="weekly_hours">Weekly Hours:</label>
+        <input type="number" name="weekly_hours" id="weekly_hours" step="0.1" min="0" required>
+
+        <button type="submit">Save Goal</button>
+    </form>
+</div>
+
+<script>
+function validateForm() {
+    const subject = document.getElementById("subject_id").value;
+    const hours = document.getElementById("weekly_hours").value;
+
+    if (!subject) {
+        alert("Please select a subject.");
+        return false;
+    }
+    if (!hours || hours <= 0) {
+        alert("Please enter a valid weekly hour goal.");
+        return false;
+    }
+    return true;
+}
+</script>
+
+<div class="dashboard-section">
+    <h3>Existing Weekly Goals & Progress</h3>
+    {% if goals %}
+    <table>
+        <tr>
+            <th>Subject</th>
+            <th>Goal (hrs/week)</th>
+            <th>Hours Logged</th>
+            <th>Progress</th>
+            <th>Action</th>
+        </tr>
+        {% for goal in goals %}
+        {% set percentage = (goal[3] / goal[2]) * 100 if goal[2] > 0 else 0 %}
+        <tr>
+            <td>{{ goal[1] }}</td>
+            <td>{{ goal[2] }}</td>
+            <td>{{ goal[3]|round(1) }}</td>
+            <td style="width: 200px;">
+                <div style="background-color: #ddd; border-radius: 6px; overflow: hidden;">
+                    <div style="width: {{ percentage if percentage <= 100 else 100 }}%; background-color: #007acc; color: white; text-align: center; padding: 2px;">
+                        {{ percentage|round(1) }}%
+                    </div>
+                </div>
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('goals.delete_goal', id=goal[0]) }}" onsubmit="return confirm('Delete this goal?');">
+                    <button type="submit">🗑 Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No goals added yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
