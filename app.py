@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_login import LoginManager
 from models import init_db, get_connection
 from api.auth_routes import auth_bp, User 
@@ -8,7 +8,8 @@ from api.dashboard_routes import dashboard_bp
 from api.topics_route import topic_bp
 from api.goals_routes import goal_bp
 from dotenv import load_dotenv
-import os
+import os, datetime, logging
+
 
 load_dotenv()
 app = Flask(__name__)
@@ -28,6 +29,10 @@ def load_user(user_id):
         if row:
             return User(user_id, row[0])  # ✅ Return a User object
         return None
+
+@app.before_request
+def log_visitor():
+    logging.info(f"{datetime.datetime.now()} | IP: {request.remote_addr} | Agent: {request.user_agent}")
 
 # Register blueprints
 app.register_blueprint(auth_bp)
